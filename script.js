@@ -1051,8 +1051,8 @@ function escapeHTML(value) {
        "https://script.google.com/macros/s/XXXXXXXX/exec";
 
 */
-
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXENoRj_ZA_YWSw0pTObnCMKPIr63kP_-XRYpBf-TbzK1ikdd6LybIgpWhCkfL18Ip/exec";
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzXENoRj_ZA_YWSw0pTObnCMKPIr63kP_-XRYpBf-TbzK1ikdd6LybIgpWhCkfL18Ip/exec";
 
 
 function sendToGoogleSheet() {
