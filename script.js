@@ -1,7 +1,15 @@
 /* =========================================================
    #projectC
-   Complete JavaScript
+   COMPLETE JAVASCRIPT
 ========================================================= */
+
+
+/* =========================================================
+   GOOGLE SHEET
+========================================================= */
+
+const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzXENoRj_ZA_YWSw0pTObnCMKPIr63kP_-XRYpBf-TbzK1ikdd6LybIgpWhCkfL18Ip/exec";
 
 
 /* =========================================================
@@ -24,18 +32,237 @@ const userData = {
 
     contactType: "",
 
-    contactInfo: ""
+    contactInfo: "",
+
+    lastStep: ""
 
 };
 
 
 /* =========================================================
-   CALENDAR DATA
+   SESSION ID
+   One browser session = one Sheet row
 ========================================================= */
 
-let calendarDate = new Date();
+let sessionId =
+    sessionStorage.getItem(
+        "projectC_session"
+    );
 
-let selectedDate = null;
+
+if (!sessionId) {
+
+    sessionId =
+        "PC-" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .substring(2, 8);
+
+    sessionStorage.setItem(
+        "projectC_session",
+        sessionId
+    );
+
+}
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+let calendarDate =
+    new Date();
+
+let selectedDate =
+    null;
+
+
+/* =========================================================
+   CURRENT STEP
+========================================================= */
+
+let currentStep =
+    "Opened";
+
+
+/* =========================================================
+   GOOGLE SHEET SAVE
+========================================================= */
+
+function saveProgress(step) {
+
+    currentStep =
+        step || currentStep;
+
+    userData.lastStep =
+        currentStep;
+
+
+    const data = {
+
+        sessionId:
+            sessionId,
+
+        timestamp:
+            new Date().toISOString(),
+
+        gender:
+            userData.gender,
+
+        name:
+            userData.name,
+
+        relationshipStatus:
+            userData.relationshipStatus,
+
+        wantsRelationship:
+            userData.wantsRelationship,
+
+        boyPreference:
+            userData.boyPreference,
+
+        meetDate:
+            userData.meetDate,
+
+        contactType:
+            userData.contactType,
+
+        contactInfo:
+            userData.contactInfo,
+
+        lastStep:
+            userData.lastStep
+
+    };
+
+
+    const payload =
+        JSON.stringify(data);
+
+
+    /*
+       sendBeacon is used so the request
+       can also be sent when the page is
+       being closed/backgrounded.
+    */
+
+    try {
+
+        const blob =
+            new Blob(
+                [payload],
+                {
+                    type:
+                        "text/plain;charset=UTF-8"
+                }
+            );
+
+
+        const sent =
+            navigator.sendBeacon(
+                GOOGLE_SCRIPT_URL,
+                blob
+            );
+
+
+        if (sent) {
+
+            console.log(
+                "Progress saved:",
+                currentStep
+            );
+
+            return;
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Beacon failed:",
+            error
+        );
+
+    }
+
+
+    /*
+       Fallback
+    */
+
+    fetch(
+        GOOGLE_SCRIPT_URL,
+        {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+
+                "Content-Type":
+                    "text/plain;charset=UTF-8"
+
+            },
+
+            body:
+                payload,
+
+            keepalive:
+                true
+
+        }
+
+    ).catch(
+        error => {
+
+            console.log(
+                "Save failed:",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SAVE BEFORE PAGE/TAB CLOSE
+========================================================= */
+
+function saveBeforeExit() {
+
+    saveProgress(
+        currentStep
+    );
+
+}
+
+
+window.addEventListener(
+    "pagehide",
+    saveBeforeExit
+);
+
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+        if (
+            document.visibilityState ===
+            "hidden"
+        ) {
+
+            saveBeforeExit();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -45,37 +272,73 @@ let selectedDate = null;
 function showPage(pageId) {
 
     const currentPage =
-        document.querySelector(".page.active");
+        document.querySelector(
+            ".page.active"
+        );
+
 
     const nextPage =
-        document.getElementById(pageId);
+        document.getElementById(
+            pageId
+        );
 
 
-    if (!nextPage) return;
+    if (!nextPage) {
 
+        console.error(
+            "Page not found:",
+            pageId
+        );
 
-    if (currentPage === nextPage) {
         return;
+
+    }
+
+
+    if (
+        currentPage ===
+        nextPage
+    ) {
+
+        return;
+
     }
 
 
     if (currentPage) {
 
-        currentPage.classList.add("leaving");
+        currentPage.classList.add(
+            "leaving"
+        );
 
 
-        setTimeout(() => {
+        setTimeout(
+            function() {
 
-            currentPage.classList.remove("active");
-            currentPage.classList.remove("leaving");
+                currentPage.classList.remove(
+                    "active"
+                );
 
-            nextPage.classList.add("active");
+                currentPage.classList.remove(
+                    "leaving"
+                );
 
-        }, 350);
 
-    } else {
+                nextPage.classList.add(
+                    "active"
+                );
 
-        nextPage.classList.add("active");
+            },
+            350
+        );
+
+    }
+
+    else {
+
+        nextPage.classList.add(
+            "active"
+        );
 
     }
 
@@ -83,24 +346,40 @@ function showPage(pageId) {
 
 
 /* =========================================================
-   BUTTON CLICK EFFECT
+   BUTTON ANIMATION
 ========================================================= */
 
-document.addEventListener("click", function(event) {
+document.addEventListener(
+    "click",
+    function(event) {
 
-    const button =
-        event.target.closest("button");
+        const button =
+            event.target.closest(
+                "button"
+            );
 
-    if (!button) return;
+
+        if (!button) {
+
+            return;
+
+        }
 
 
-    button.classList.remove("clicked");
+        button.classList.remove(
+            "clicked"
+        );
 
-    void button.offsetWidth;
 
-    button.classList.add("clicked");
+        void button.offsetWidth;
 
-});
+
+        button.classList.add(
+            "clicked"
+        );
+
+    }
+);
 
 
 /* =========================================================
@@ -109,9 +388,18 @@ document.addEventListener("click", function(event) {
 
 function selectGirl() {
 
-    userData.gender = "Girl";
+    userData.gender =
+        "Girl";
 
-    showPage("namePage");
+
+    saveProgress(
+        "Gender"
+    );
+
+
+    showPage(
+        "namePage"
+    );
 
 }
 
@@ -122,9 +410,19 @@ function selectGirl() {
 
 function selectBoy() {
 
-    userData.gender = "Boy";
+    userData.gender =
+        "Boy";
 
-    showPage("hackingPage");
+
+    saveProgress(
+        "Boy Selected"
+    );
+
+
+    showPage(
+        "hackingPage"
+    );
+
 
     startHackingAnimation();
 
@@ -138,7 +436,16 @@ function selectBoy() {
 function startHackingAnimation() {
 
     const hackText =
-        document.getElementById("hackText");
+        document.getElementById(
+            "hackText"
+        );
+
+
+    if (!hackText) {
+
+        return;
+
+    }
 
 
     const lines = [
@@ -160,22 +467,30 @@ function startHackingAnimation() {
     ];
 
 
-    hackText.innerHTML = "";
+    hackText.innerHTML =
+        "";
 
 
-    let index = 0;
+    let index =
+        0;
 
 
     function addLine() {
 
-        if (index >= lines.length) {
+        if (
+            index >=
+            lines.length
+        ) {
 
-            setTimeout(() => {
+            setTimeout(
+                function() {
 
-                hackText.innerHTML +=
-                    `<br><strong>💀 BYE BRO</strong>`;
+                    hackText.innerHTML +=
+                        "<br><strong>💀 BYE BRO</strong>";
 
-            }, 500);
+                },
+                500
+            );
 
             return;
 
@@ -183,27 +498,37 @@ function startHackingAnimation() {
 
 
         const line =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         line.textContent =
-            "> " + lines[index];
+            "> " +
+            lines[index];
 
 
-        line.style.opacity = "0";
+        line.style.opacity =
+            "0";
 
 
-        hackText.appendChild(line);
+        hackText.appendChild(
+            line
+        );
 
 
-        setTimeout(() => {
+        setTimeout(
+            function() {
 
-            line.style.transition =
-                "opacity .3s ease";
+                line.style.transition =
+                    "opacity .3s ease";
 
-            line.style.opacity = "1";
+                line.style.opacity =
+                    "1";
 
-        }, 50);
+            },
+            50
+        );
 
 
         index++;
@@ -229,7 +554,9 @@ function startHackingAnimation() {
 function submitName() {
 
     const input =
-        document.getElementById("nameInput");
+        document.getElementById(
+            "nameInput"
+        );
 
 
     const name =
@@ -238,14 +565,22 @@ function submitName() {
 
     if (!name) {
 
-        shakeElement(input);
+        shakeElement(
+            input
+        );
 
         return;
 
     }
 
 
-    userData.name = name;
+    userData.name =
+        name;
+
+
+    saveProgress(
+        "Name"
+    );
 
 
     showPage(
@@ -256,22 +591,34 @@ function submitName() {
 
 
 /* =========================================================
-   RELATIONSHIP STATUS
+   RELATIONSHIP
 ========================================================= */
 
-function selectRelationship(status) {
+function selectRelationship(
+    status
+) {
 
     userData.relationshipStatus =
         status;
 
 
-    if (status === "taken") {
+    saveProgress(
+        "Relationship Status"
+    );
+
+
+    if (
+        status ===
+        "taken"
+    ) {
 
         showPage(
             "breakupPage"
         );
 
-    } else {
+    }
+
+    else {
 
         showPage(
             "wantRelationshipPage"
@@ -286,13 +633,22 @@ function selectRelationship(status) {
    WANT RELATIONSHIP
 ========================================================= */
 
-function wantRelationship(answer) {
+function wantRelationship(
+    answer
+) {
 
-
-    if (answer === true) {
+    if (
+        answer ===
+        true
+    ) {
 
         userData.wantsRelationship =
             "Yes";
+
+
+        saveProgress(
+            "Wants Relationship: Yes"
+        );
 
 
         showPage(
@@ -309,9 +665,18 @@ function wantRelationship(answer) {
         "No";
 
 
+    saveProgress(
+        "Wants Relationship: No"
+    );
+
+
     document
-        .getElementById("thinkAgainPopup")
-        .classList.add("show");
+        .getElementById(
+            "thinkAgainPopup"
+        )
+        .classList.add(
+            "show"
+        );
 
 }
 
@@ -323,8 +688,17 @@ function wantRelationship(answer) {
 function thinkAgainYes() {
 
     document
-        .getElementById("thinkAgainPopup")
-        .classList.remove("show");
+        .getElementById(
+            "thinkAgainPopup"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    saveProgress(
+        "Think Again"
+    );
 
 
     showPage(
@@ -341,8 +715,17 @@ function thinkAgainYes() {
 function thinkAgainNo() {
 
     document
-        .getElementById("thinkAgainPopup")
-        .classList.remove("show");
+        .getElementById(
+            "thinkAgainPopup"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    saveProgress(
+        "Ended - No Relationship"
+    );
 
 
     showTemporaryEndMessage();
@@ -351,13 +734,15 @@ function thinkAgainNo() {
 
 
 /* =========================================================
-   TEMP END MESSAGE
+   TEMP END
 ========================================================= */
 
 function showTemporaryEndMessage() {
 
     const overlay =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     overlay.className =
@@ -410,7 +795,9 @@ function submitPreference() {
 
     if (!preference) {
 
-        shakeElement(input);
+        shakeElement(
+            input
+        );
 
         return;
 
@@ -419,6 +806,11 @@ function submitPreference() {
 
     userData.boyPreference =
         preference;
+
+
+    saveProgress(
+        "Boy Preference"
+    );
 
 
     calendarDate =
@@ -463,8 +855,10 @@ function renderCalendar() {
         );
 
 
-    if (!monthYear ||
-        !calendarDays) {
+    if (
+        !monthYear ||
+        !calendarDays
+    ) {
 
         return;
 
@@ -482,23 +876,36 @@ function renderCalendar() {
     const monthNames = [
 
         "January",
+
         "February",
+
         "March",
+
         "April",
+
         "May",
+
         "June",
+
         "July",
+
         "August",
+
         "September",
+
         "October",
+
         "November",
+
         "December"
 
     ];
 
 
     monthYear.textContent =
-        `${monthNames[month]} ${year}`;
+        monthNames[month] +
+        " " +
+        year;
 
 
     calendarDays.innerHTML =
@@ -526,11 +933,14 @@ function renderCalendar() {
 
 
     today.setHours(
-        0,0,0,0
+        0,
+        0,
+        0,
+        0
     );
 
 
-    /* Empty days */
+    /* Empty spaces */
 
     for (
         let i = 0;
@@ -551,7 +961,7 @@ function renderCalendar() {
     }
 
 
-    /* Actual days */
+    /* Days */
 
     for (
         let day = 1;
@@ -563,6 +973,10 @@ function renderCalendar() {
             document.createElement(
                 "button"
             );
+
+
+        button.type =
+            "button";
 
 
         button.className =
@@ -582,13 +996,19 @@ function renderCalendar() {
 
 
         current.setHours(
-            0,0,0,0
+            0,
+            0,
+            0,
+            0
         );
 
 
-        /* Disable past */
+        /* Past */
 
-        if (current < today) {
+        if (
+            current <
+            today
+        ) {
 
             button.classList.add(
                 "disabled"
@@ -633,7 +1053,9 @@ function renderCalendar() {
             "click",
             function() {
 
-                selectDate(current);
+                selectDate(
+                    current
+                );
 
             }
         );
@@ -646,7 +1068,10 @@ function renderCalendar() {
     }
 
 
-    if (!selectedDate) {
+    if (
+        !selectedDate &&
+        selectedText
+    ) {
 
         selectedText.textContent =
             "Choose a date 💗";
@@ -660,7 +1085,9 @@ function renderCalendar() {
    SELECT DATE
 ========================================================= */
 
-function selectDate(date) {
+function selectDate(
+    date
+) {
 
     selectedDate =
         new Date(date);
@@ -675,23 +1102,29 @@ function selectDate(date) {
         );
 
 
-    const options = {
+    if (!selectedText) {
 
-        weekday: "short",
+        return;
 
-        day: "numeric",
-
-        month: "short",
-
-        year: "numeric"
-
-    };
+    }
 
 
     selectedText.textContent =
         selectedDate.toLocaleDateString(
             "en-US",
-            options
+            {
+                weekday:
+                    "short",
+
+                day:
+                    "numeric",
+
+                month:
+                    "short",
+
+                year:
+                    "numeric"
+            }
         );
 
 }
@@ -701,10 +1134,14 @@ function selectDate(date) {
    CHANGE MONTH
 ========================================================= */
 
-function changeMonth(direction) {
+function changeMonth(
+    direction
+) {
 
     const newDate =
-        new Date(calendarDate);
+        new Date(
+            calendarDate
+        );
 
 
     newDate.setMonth(
@@ -717,16 +1154,22 @@ function changeMonth(direction) {
         new Date();
 
 
-    today.setDate(1);
+    today.setDate(
+        1
+    );
 
 
-    if (
-        newDate <
+    const minimum =
         new Date(
             today.getFullYear(),
             today.getMonth(),
             1
-        )
+        );
+
+
+    if (
+        newDate <
+        minimum
     ) {
 
         return;
@@ -761,7 +1204,14 @@ function submitDate() {
 
 
     userData.meetDate =
-        formatDate(selectedDate);
+        formatDate(
+            selectedDate
+        );
+
+
+    saveProgress(
+        "Meeting Date"
+    );
 
 
     showPage(
@@ -775,7 +1225,9 @@ function submitDate() {
    FORMAT DATE
 ========================================================= */
 
-function formatDate(date) {
+function formatDate(
+    date
+) {
 
     const year =
         date.getFullYear();
@@ -784,16 +1236,28 @@ function formatDate(date) {
     const month =
         String(
             date.getMonth() + 1
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
 
 
     const day =
         String(
             date.getDate()
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
 
 
-    return `${year}-${month}-${day}`;
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
 
 }
 
@@ -846,12 +1310,12 @@ function submitContact() {
         info;
 
 
+    saveProgress(
+        "Completed"
+    );
+
+
     showFinalPage();
-
-
-    /* Google Sheet */
-
-    sendToGoogleSheet();
 
 }
 
@@ -868,21 +1332,38 @@ function showFinalPage() {
         );
 
 
+    if (!message) {
+
+        return;
+
+    }
+
+
     message.innerHTML = `
 
         <strong>
-            ${escapeHTML(userData.name)}
+            ${escapeHTML(
+                userData.name
+            )}
         </strong>
+
         <br>
 
-        Your little plan is ready 💕
+        Your little plan
+        is ready 💕
+
         <br><br>
 
         <span>
+
             See you on
+
             <strong>
-                ${userData.meetDate}
+                ${escapeHTML(
+                    userData.meetDate
+                )}
             </strong>
+
         </span>
 
     `;
@@ -899,7 +1380,9 @@ function showFinalPage() {
    SMALL NOTICE
 ========================================================= */
 
-function showSmallNotice(message) {
+function showSmallNotice(
+    message
+) {
 
     const old =
         document.querySelector(
@@ -908,7 +1391,9 @@ function showSmallNotice(message) {
 
 
     if (old) {
+
         old.remove();
+
     }
 
 
@@ -931,20 +1416,26 @@ function showSmallNotice(message) {
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        function() {
 
-        notice.classList.add(
-            "hide"
-        );
+            notice.classList.add(
+                "hide"
+            );
 
 
-        setTimeout(() => {
+            setTimeout(
+                function() {
 
-            notice.remove();
+                    notice.remove();
 
-        },300);
+                },
+                300
+            );
 
-    },1800);
+        },
+        1800
+    );
 
 }
 
@@ -953,7 +1444,16 @@ function showSmallNotice(message) {
    INPUT SHAKE
 ========================================================= */
 
-function shakeElement(element) {
+function shakeElement(
+    element
+) {
+
+    if (!element) {
+
+        return;
+
+    }
+
 
     element.animate(
 
@@ -992,8 +1492,8 @@ function shakeElement(element) {
         ],
 
         {
-
-            duration: 350
+            duration:
+                350
 
         }
 
@@ -1006,9 +1506,13 @@ function shakeElement(element) {
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
 
-    return value
+    return String(
+        value || ""
+    )
 
         .replace(
             /&/g,
@@ -1039,114 +1543,7 @@ function escapeHTML(value) {
 
 
 /* =========================================================
-   GOOGLE SHEETS
-========================================================= */
-
-/*
-   এখানে পরে Google Apps Script Web App URL বসাবে।
-
-   Example:
-
-   const GOOGLE_SCRIPT_URL =
-       "https://script.google.com/macros/s/XXXXXXXX/exec";
-
-*/
-const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzXENoRj_ZA_YWSw0pTObnCMKPIr63kP_-XRYpBf-TbzK1ikdd6LybIgpWhCkfL18Ip/exec";
-
-
-function sendToGoogleSheet() {
-
-    if (!GOOGLE_SCRIPT_URL) {
-
-        console.log(
-            "Google Sheet URL not added yet.",
-            userData
-        );
-
-        return;
-
-    }
-
-
-    const data = {
-
-        gender:
-            userData.gender,
-
-        name:
-            userData.name,
-
-        relationshipStatus:
-            userData.relationshipStatus,
-
-        wantsRelationship:
-            userData.wantsRelationship,
-
-        boyPreference:
-            userData.boyPreference,
-
-        meetDate:
-            userData.meetDate,
-
-        contactType:
-            userData.contactType,
-
-        contactInfo:
-            userData.contactInfo,
-
-        submittedAt:
-            new Date().toISOString()
-
-    };
-
-
-    fetch(
-        GOOGLE_SCRIPT_URL,
-        {
-
-            method: "POST",
-
-            mode: "no-cors",
-
-            headers: {
-
-                "Content-Type":
-                    "application/json"
-
-            },
-
-            body:
-                JSON.stringify(data)
-
-        }
-
-    )
-    .then(() => {
-
-        console.log(
-            "Data sent to Google Sheet."
-        );
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "Sheet error:",
-            error
-        );
-
-    });
-
-}
-
-setTimeout(() => {
-    console.log("Testing Google Sheet...");
-    sendToGoogleSheet();
-}, 3000);
-/* =========================================================
-   INITIALIZE CALENDAR
+   INITIALIZE
 ========================================================= */
 
 document.addEventListener(
