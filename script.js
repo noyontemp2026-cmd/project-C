@@ -458,10 +458,6 @@ function submitName() {
     userData.name = name;
 
 
-    showPage(
-        "relationshipPage"
-    );
-
 
 
 
