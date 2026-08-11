@@ -1141,7 +1141,10 @@ function sendToGoogleSheet() {
 
 }
 
-
+setTimeout(() => {
+    console.log("Testing Google Sheet...");
+    sendToGoogleSheet();
+}, 3000);
 /* =========================================================
    INITIALIZE CALENDAR
 ========================================================= */
