@@ -27,7 +27,197 @@ const userData = {
     contactInfo: ""
 
 };
+/* =========================================================
+   AUTO SAVE / SESSION TRACKING
+========================================================= */
 
+const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzXENoRj_ZA_YWSw0pTObnCMKPIr63kP_-XRYpBf-TbzK1ikdd6LybIgpWhCkfL18Ip/exec";
+
+
+let sessionId =
+    localStorage.getItem("projectC_session_id");
+
+
+if (!sessionId) {
+
+    sessionId =
+        "SC-" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .substring(2, 9);
+
+    localStorage.setItem(
+        "projectC_session_id",
+        sessionId
+    );
+
+}
+
+
+/* Save progress */
+
+function saveProgress(step) {
+
+    const data = {
+
+        sessionId:
+            sessionId,
+
+        timestamp:
+            new Date().toISOString(),
+
+        gender:
+            userData.gender || "",
+
+        name:
+            userData.name || "",
+
+        relationshipStatus:
+            userData.relationshipStatus || "",
+
+        wantsRelationship:
+            userData.wantsRelationship || "",
+
+        boyPreference:
+            userData.boyPreference || "",
+
+        meetDate:
+            userData.meetDate || "",
+
+        contactType:
+            userData.contactType || "",
+
+        contactInfo:
+            userData.contactInfo || "",
+
+        lastStep:
+            step || ""
+
+    };
+
+
+    fetch(
+        GOOGLE_SCRIPT_URL,
+        {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+                "Content-Type":
+                    "text/plain;charset=utf-8"
+            },
+
+            body:
+                JSON.stringify(data)
+
+        }
+    )
+    .catch(() => {
+
+        console.log(
+            "Progress save failed."
+        );
+
+    });
+
+}
+
+
+/* Save immediately when page is being closed */
+
+function saveBeforeExit() {
+
+    const data = {
+
+        sessionId:
+            sessionId,
+
+        timestamp:
+            new Date().toISOString(),
+
+        gender:
+            userData.gender || "",
+
+        name:
+            userData.name || "",
+
+        relationshipStatus:
+            userData.relationshipStatus || "",
+
+        wantsRelationship:
+            userData.wantsRelationship || "",
+
+        boyPreference:
+            userData.boyPreference || "",
+
+        meetDate:
+            userData.meetDate || "",
+
+        contactType:
+            userData.contactType || "",
+
+        contactInfo:
+            userData.contactInfo || "",
+
+        lastStep:
+            currentStep || "Unknown"
+
+    };
+
+
+    const blob =
+        new Blob(
+            [JSON.stringify(data)],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+
+    navigator.sendBeacon(
+        GOOGLE_SCRIPT_URL,
+        blob
+    );
+
+}
+
+
+/* Current step */
+
+let currentStep = "Opened";
+
+
+/* Browser/tab close */
+
+window.addEventListener(
+    "pagehide",
+    saveBeforeExit
+);
+
+
+/* Mobile browser background */
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+        if (
+            document.visibilityState ===
+            "hidden"
+        ) {
+
+            saveBeforeExit();
+
+        }
+
+    }
+);
 
 /* =========================================================
    CALENDAR DATA
@@ -111,6 +301,10 @@ function selectGirl() {
 
     userData.gender = "Girl";
 
+    currentStep = "Gender";
+
+    saveProgress("Gender");
+
     showPage("namePage");
 
 }
@@ -123,6 +317,10 @@ function selectGirl() {
 function selectBoy() {
 
     userData.gender = "Boy";
+
+    currentStep = "Boy Selected";
+
+    saveProgress("Boy Selected");
 
     showPage("hackingPage");
 
@@ -231,7 +429,6 @@ function submitName() {
     const input =
         document.getElementById("nameInput");
 
-
     const name =
         input.value.trim();
 
@@ -244,6 +441,19 @@ function submitName() {
 
     }
 
+
+    userData.name = name;
+
+    currentStep = "Name";
+
+    saveProgress("Name");
+
+
+    showPage(
+        "relationshipPage"
+    );
+
+}
 
     userData.name = name;
 
@@ -263,6 +473,15 @@ function selectRelationship(status) {
 
     userData.relationshipStatus =
         status;
+
+
+    currentStep =
+        "Relationship Status";
+
+
+    saveProgress(
+        "Relationship Status"
+    );
 
 
     if (status === "taken") {
@@ -415,6 +634,36 @@ function submitPreference() {
         return;
 
     }
+
+
+    userData.boyPreference =
+        preference;
+
+
+    currentStep =
+        "Boy Preference";
+
+
+    saveProgress(
+        "Boy Preference"
+    );
+
+
+    calendarDate =
+        new Date();
+
+    selectedDate =
+        null;
+
+
+    renderCalendar();
+
+
+    showPage(
+        "calendarPage"
+    );
+
+}
 
 
     userData.boyPreference =
@@ -764,6 +1013,15 @@ function submitDate() {
         formatDate(selectedDate);
 
 
+    currentStep =
+        "Meeting Date";
+
+
+    saveProgress(
+        "Meeting Date"
+    );
+
+
     showPage(
         "contactPage"
     );
@@ -841,20 +1099,22 @@ function submitContact() {
     userData.contactType =
         type;
 
-
     userData.contactInfo =
         info;
 
 
+    currentStep =
+        "Completed";
+
+
+    saveProgress(
+        "Completed"
+    );
+
+
     showFinalPage();
 
-
-    /* Google Sheet */
-
-    sendToGoogleSheet();
-
 }
-
 
 /* =========================================================
    FINAL PAGE
