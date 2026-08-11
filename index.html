@@ -2,475 +2,522 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>A Little Something 💗</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>#projectC 💗</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-    <!-- Soft background decorations -->
-    <div class="background-decor">
-        <span>♡</span>
-        <span>✦</span>
-        <span>♡</span>
-        <span>✧</span>
-        <span>♡</span>
-        <span>✦</span>
-        <span>♡</span>
-    </div>
-
-
-    <main id="app">
-
-        <!-- =====================================
-             1. GENDER
-        ====================================== -->
-
-        <section class="page active" id="genderPage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    🎀
-                </div>
-
-                <p>Just few thing...</p>
-
-                <p class="question">
-                   <h1> Are you a girl?</h1>
-                </p>
-
-                <div class="button-row">
-
-                    <button class="cute-btn"
-                            onclick="selectGirl()">
-                        Yes 💕
-                    </button>
-
-                    <button class="cute-btn secondary"
-                            onclick="selectBoy()">
-                        No 🙂
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             2. BOY HACKING SCREEN
-        ====================================== -->
-
-        <section class="page dark-page" id="hackingPage">
-
-            <div class="hack-container">
-
-                <div class="hack-top">
-                    SYSTEM CHECK
-                </div>
-
-                <div id="hackText"></div>
-
-                <div class="hack-loading">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             3. NAME
-        ====================================== -->
-
-        <section class="page" id="namePage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    🌷
-                </div>
-
-                <p>Nice to meet you</p>
-
-                <h1 class="question">
-                    What's your name?
-                </h1>
-
-                <input
-                    id="nameInput"
-                    class="cute-input"
-                    type="text"
-                    placeholder="Your name..."
-                    autocomplete="off"
-                >
-
-                <button class="cute-btn full"
-                        onclick="submitName()">
-                    Continue ✨
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             4. RELATIONSHIP STATUS
-        ====================================== -->
-
-        <section class="page" id="relationshipPage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    💌
-                </div>
-
-                <h1>Tell me...</h1>
-
-                <p class="question">
-                    What's your relationship status?
-                </p>
-
-                <div class="choice-list">
-
-                    <button class="choice-btn"
-                            onclick="selectRelationship('taken')">
-                        <span>❤️</span>
-                        In a Relationship
-                    </button>
-
-                    <button class="choice-btn"
-                            onclick="selectRelationship('single')">
-                        <span>💙</span>
-                        Single
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             5. BREAKUP
-        ====================================== -->
-
-        <section class="page" id="breakupPage">
-
-            <div class="card">
-
-                <div class="cute-icon sad">
-                    🥲
-                </div>
-
-                <h1>Oops...</h1>
-
-                <p class="big-message">
-                    Tnx! Try after your breakup 😌
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             6. WANT RELATIONSHIP
-        ====================================== -->
-
-        <section class="page" id="wantRelationshipPage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    💗
-                </div>
-
-                <h1>Okay...</h1>
-
-                <p class="question">
-                    Do you want a relationship?
-                </p>
-
-                <div class="button-row">
-
-                    <button class="cute-btn"
-                            onclick="wantRelationship(true)">
-                        Yes ❤️
-                    </button>
-
-                    <button class="cute-btn secondary"
-                            onclick="wantRelationship(false)">
-                        No 🙂
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             THINK AGAIN POPUP
-        ====================================== -->
-
-        <div id="thinkAgainPopup"
-             class="popup">
-
-            <div class="popup-card">
-
-                <div class="popup-icon">
-                    👀
-                </div>
-
-                <h2>Think again?</h2>
-
-                <p>
-                    Maybe give it another thought 💕
-                </p>
-
-                <div class="button-row">
-
-                    <button class="cute-btn"
-                            onclick="thinkAgainYes()">
-                        OK 💗
-                    </button>
-
-                    <button class="cute-btn secondary"
-                            onclick="thinkAgainNo()">
-                        No
-                    </button>
-
-                </div>
-
-            </div>
+<!-- =====================================================
+     WELCOME / GENDER
+===================================================== -->
+
+<section
+    class="page active"
+    id="genderPage"
+>
+
+    <div class="card">
+
+        <div class="cute-icon">
+            🌷
+        </div>
+
+        <h1>
+            Hi there 💕
+        </h1>
+
+        <p>
+            Before we start...
+        </p>
+
+        <h2>
+            Are you a girl?
+        </h2>
+
+        <div class="buttons">
+
+            <button
+                onclick="selectGirl()"
+                class="primary"
+            >
+                👧 Yes
+            </button>
+
+            <button
+                onclick="selectBoy()"
+                class="secondary"
+            >
+                👦 No
+            </button>
 
         </div>
 
+    </div>
 
-        <!-- =====================================
-             7. BOY PREFERENCE
-        ====================================== -->
-
-        <section class="page" id="preferencePage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    💭
-                </div>
-
-                <h1>Tell me your type</h1>
-
-                <p class="question">
-                    What kind of boy are you looking for?
-                </p>
-
-                <textarea
-                    id="preferenceInput"
-                    class="cute-input textarea"
-                    placeholder="Write here..."
-                ></textarea>
-
-                <button class="cute-btn full"
-                        onclick="submitPreference()">
-                    Continue ✨
-                </button>
-
-            </div>
-
-        </section>
+</section>
 
 
-        <!-- =====================================
-             8. CUSTOM CALENDAR
-        ====================================== -->
+<!-- =====================================================
+     BOY / HACKING
+===================================================== -->
 
-        <section class="page" id="calendarPage">
+<section
+    class="page dark-page"
+    id="hackingPage"
+>
 
-            <div class="card calendar-card">
+    <div class="hack-container">
 
-                <div class="cute-icon small-icon">
-                    🌸
-                </div>
+        <div class="terminal-top">
 
-                <h1>Pick a day</h1>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
 
-                <p class="question">
-                    When do you want to meet?
-                </p>
+            <span class="terminal-title">
+                system_check.exe
+            </span>
 
+        </div>
 
-                <div class="calendar">
+        <div
+            id="hackText"
+            class="hack-text"
+        ></div>
 
-                    <div class="calendar-header">
+    </div>
 
-                        <button class="month-btn"
-                                onclick="changeMonth(-1)">
-                            ‹
-                        </button>
-
-                        <div id="monthYear">
-                            Month Year
-                        </div>
-
-                        <button class="month-btn"
-                                onclick="changeMonth(1)">
-                            ›
-                        </button>
-
-                    </div>
+</section>
 
 
-                    <div class="weekdays">
+<!-- =====================================================
+     NAME
+===================================================== -->
 
-                        <span>Sun</span>
-                        <span>Mon</span>
-                        <span>Tue</span>
-                        <span>Wed</span>
-                        <span>Thu</span>
-                        <span>Fri</span>
-                        <span>Sat</span>
+<section
+    class="page"
+    id="namePage"
+>
 
-                    </div>
+    <div class="card">
 
+        <div class="cute-icon">
+            🌸
+        </div>
 
-                    <div id="calendarDays"
-                         class="calendar-days">
-                    </div>
+        <h1>
+            What's your name?
+        </h1>
 
-                </div>
+        <input
+            id="nameInput"
+            type="text"
+            placeholder="Write your name..."
+            autocomplete="name"
+            maxlength="60"
+        >
 
+        <button
+            onclick="submitName()"
+            class="primary"
+        >
+            Continue 💕
+        </button>
 
-                <div class="selected-date"
-                     id="selectedDateText">
+    </div>
 
-                    Choose a date 💗
-
-                </div>
-
-
-                <button class="cute-btn full"
-                        onclick="submitDate()">
-                    Continue ✨
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             9. CONTACT
-        ====================================== -->
-
-        <section class="page" id="contactPage">
-
-            <div class="card">
-
-                <div class="cute-icon">
-                    💌
-                </div>
-
-                <h1>One last thing...</h1>
-
-                <p class="question">
-                    How can we contact you?
-                </p>
+</section>
 
 
-                <select id="contactType"
-                        class="cute-input">
+<!-- =====================================================
+     RELATIONSHIP
+===================================================== -->
 
-                    <option value="">
-                        Choose one...
-                    </option>
+<section
+    class="page"
+    id="relationshipPage"
+>
 
-                    <option value="Instagram">
-                        Instagram
-                    </option>
+    <div class="card">
 
-                    <option value="Facebook">
-                        Facebook
-                    </option>
+        <div class="cute-icon">
+            💗
+        </div>
 
-                    <option value="WhatsApp">
-                        WhatsApp
-                    </option>
+        <h1>
+            Relationship status?
+        </h1>
 
-                    <option value="Phone Number">
-                        Phone Number
-                    </option>
+        <div class="buttons">
 
-                    <option value="Other">
-                        Other
-                    </option>
+            <button
+                onclick="selectRelationship('taken')"
+                class="primary"
+            >
+                ❤️ In a relationship
+            </button>
 
-                </select>
+            <button
+                onclick="selectRelationship('single')"
+                class="secondary"
+            >
+                🌸 Single
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
 
 
-                <input
-                    id="contactInput"
-                    class="cute-input"
-                    type="text"
-                    placeholder="Your ID / Number / Link..."
-                    autocomplete="off"
+<!-- =====================================================
+     BREAKUP
+===================================================== -->
+
+<section
+    class="page"
+    id="breakupPage"
+>
+
+    <div class="card">
+
+        <div class="cute-icon">
+            😌
+        </div>
+
+        <h1>
+            Tnx!
+        </h1>
+
+        <p class="big-message">
+            Try after your breakup 😌
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     WANT RELATIONSHIP
+===================================================== -->
+
+<section
+    class="page"
+    id="wantRelationshipPage"
+>
+
+    <div class="card">
+
+        <div class="cute-icon">
+            💞
+        </div>
+
+        <h1>
+            Do you want a relationship?
+        </h1>
+
+        <div class="buttons">
+
+            <button
+                onclick="wantRelationship(true)"
+                class="primary"
+            >
+                Yes 💗
+            </button>
+
+            <button
+                onclick="wantRelationship(false)"
+                class="secondary"
+            >
+                No 🙈
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     THINK AGAIN POPUP
+===================================================== -->
+
+<div
+    id="thinkAgainPopup"
+    class="popup"
+>
+
+    <div class="popup-card">
+
+        <div class="popup-icon">
+            🤭
+        </div>
+
+        <h2>
+            Think again?
+        </h2>
+
+        <div class="buttons">
+
+            <button
+                onclick="thinkAgainYes()"
+                class="primary"
+            >
+                OK 💗
+            </button>
+
+            <button
+                onclick="thinkAgainNo()"
+                class="secondary"
+            >
+                No
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PREFERENCE
+===================================================== -->
+
+<section
+    class="page"
+    id="preferencePage"
+>
+
+    <div class="card">
+
+        <div class="cute-icon">
+            💭
+        </div>
+
+        <h1>
+            What kind of boy
+            are you looking for?
+        </h1>
+
+        <textarea
+            id="preferenceInput"
+            placeholder="Write here..."
+            maxlength="1000"
+        ></textarea>
+
+        <button
+            onclick="submitPreference()"
+            class="primary"
+        >
+            Continue ✨
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CALENDAR
+===================================================== -->
+
+<section
+    class="page"
+    id="calendarPage"
+>
+
+    <div class="card calendar-card">
+
+        <div class="cute-icon">
+            📅
+        </div>
+
+        <h1>
+            When do you want to meet?
+        </h1>
+
+        <div class="calendar">
+
+            <div class="calendar-header">
+
+                <button
+                    onclick="changeMonth(-1)"
+                    class="month-btn"
                 >
+                    ‹
+                </button>
 
+                <h2 id="monthYear">
+                    Month Year
+                </h2>
 
-                <button class="cute-btn full"
-                        onclick="submitContact()">
-                    Finish 💕
+                <button
+                    onclick="changeMonth(1)"
+                    class="month-btn"
+                >
+                    ›
                 </button>
 
             </div>
 
-        </section>
+            <div class="weekdays">
 
-
-        <!-- =====================================
-             10. FINAL
-        ====================================== -->
-
-        <section class="page final-page"
-                 id="finalPage">
-
-            <div class="card final-card">
-
-                <div class="final-heart">
-                    💗
-                </div>
-
-                <h1>All done!</h1>
-
-                <p id="finalMessage"
-                   class="final-message">
-                </p>
-
-                <div class="final-hearts">
-                    ♡　♡　♡
-                </div>
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
 
             </div>
 
-        </section>
+            <div
+                id="calendarDays"
+                class="calendar-days"
+            ></div>
 
-    </main>
+        </div>
+
+        <p
+            id="selectedDateText"
+            class="selected-date"
+        >
+            Choose a date 💗
+        </p>
+
+        <button
+            onclick="submitDate()"
+            class="primary"
+        >
+            Continue 🌷
+        </button>
+
+    </div>
+
+</section>
 
 
-    <script src="script.js"></script>
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+
+<section
+    class="page"
+    id="contactPage"
+>
+
+    <div class="card">
+
+        <div class="cute-icon">
+            💌
+        </div>
+
+        <h1>
+            Leave a contact
+        </h1>
+
+        <p>
+            Anything you prefer.
+        </p>
+
+        <select
+            id="contactType"
+        >
+
+            <option value="">
+                Choose one...
+            </option>
+
+            <option value="Phone">
+                📱 Phone
+            </option>
+
+            <option value="WhatsApp">
+                💬 WhatsApp
+            </option>
+
+            <option value="Instagram">
+                📸 Instagram
+            </option>
+
+            <option value="Facebook">
+                💙 Facebook
+            </option>
+
+            <option value="Email">
+                ✉️ Email
+            </option>
+
+            <option value="Other">
+                ✨ Other
+            </option>
+
+        </select>
+
+        <input
+            id="contactInput"
+            type="text"
+            placeholder="Your contact..."
+            maxlength="200"
+        >
+
+        <button
+            onclick="submitContact()"
+            class="primary"
+        >
+            Finish ❤️
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FINAL
+===================================================== -->
+
+<section
+    class="page"
+    id="finalPage"
+>
+
+    <div class="card final-card">
+
+        <div class="heart-animation">
+            ❤️
+        </div>
+
+        <div id="finalMessage">
+            Your little plan is ready 💕
+        </div>
+
+        <div class="floating-hearts">
+            💗 💕 💖 💗
+        </div>
+
+    </div>
+
+</section>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
