@@ -507,30 +507,34 @@ function selectRelationship(status) {
 
 function wantRelationship(answer) {
 
+    userData.wantsRelationship =
+        answer ? "Yes" : "No";
+
+
+    currentStep =
+        "Relationship Question";
+
+
+    saveProgress(
+        "Relationship Question"
+    );
+
 
     if (answer === true) {
-
-        userData.wantsRelationship =
-            "Yes";
-
 
         showPage(
             "preferencePage"
         );
 
+    } else {
 
-        return;
+        document
+            .getElementById(
+                "thinkAgainPopup"
+            )
+            .classList.add("show");
 
     }
-
-
-    userData.wantsRelationship =
-        "No";
-
-
-    document
-        .getElementById("thinkAgainPopup")
-        .classList.add("show");
 
 }
 
